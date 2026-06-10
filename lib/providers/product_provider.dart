@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
 import '../models/product.dart';
 import '../services/api_service.dart';
 
@@ -188,6 +187,13 @@ class ProductProvider extends ChangeNotifier {
     } catch (e) {
       print('Error loading wishlist: $e');
     }
+  }
+
+  /// Clear all wishlist items
+  Future<void> clearWishlist() async {
+    _wishlistIds.clear();
+    await _saveWishlist();
+    notifyListeners();
   }
 
   /// Get wishlist products

@@ -127,12 +127,8 @@ class WishlistScreen extends StatelessWidget {
             child: const Text('Cancel'),
           ),
           TextButton(
-            onPressed: () {
-              // Clear all wishlist items
-              for (int id in provider.wishlistIds.toList()) {
-                provider.wishlistIds.remove(id);
-              }
-              provider.notifyListeners();
+            onPressed: () async {
+              await provider.clearWishlist();
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
