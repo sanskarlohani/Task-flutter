@@ -1,0 +1,40 @@
+name: product_app
+description: A Flutter application for displaying products from DummyJSON API with search, filter, and pagination features.
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # State Management
+  provider: ^6.1.0
+
+  # HTTP requests
+  http: ^1.1.0
+
+  # Local storage
+  shared_preferences: ^2.2.2
+
+  # Database for offline support
+  sqflite: ^2.3.0
+  path: ^1.8.3
+
+  # UI enhancements
+  cached_network_image: ^3.3.0
+
+  # Utilities
+  intl: ^0.19.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
