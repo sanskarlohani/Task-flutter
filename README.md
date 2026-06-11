@@ -59,7 +59,7 @@ lib/
 
 1. **Clone or Extract the Project**
 ```bash
-cd /path/to/project
+cd Task-flutter
 ```
 
 2. **Install Dependencies**
