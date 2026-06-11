@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,6 +12,7 @@ class ProductProvider extends ChangeNotifier {
   // Product list state
   List<Product> _products = [];
   List<Product> _allProducts = [];
+  final Map<int, Product> _productCache = {};
   bool _isLoading = false;
   String? _error;
 
@@ -28,6 +30,7 @@ class ProductProvider extends ChangeNotifier {
 
   // Wishlist state
   List<int> _wishlistIds = [];
+  List<Product> _wishlistProducts = [];
 
   // Debounce timer for search
   Timer? _debounceTimer;
@@ -76,6 +79,10 @@ class ProductProvider extends ChangeNotifier {
 
       _allProducts = result['products'];
       _totalProducts = result['total'] ?? 0;
+
+      for (final product in _allProducts) {
+        _productCache[product.id] = product;
+      }
 
       if (reset || _currentSkip == 0) {
         _products = _allProducts;
@@ -149,6 +156,7 @@ class ProductProvider extends ChangeNotifier {
   Future<void> addToWishlist(Product product) async {
     if (!_wishlistIds.contains(product.id)) {
       _wishlistIds.add(product.id);
+      _wishlistProducts.add(product);
       await _saveWishlist();
       notifyListeners();
     }
@@ -157,6 +165,7 @@ class ProductProvider extends ChangeNotifier {
   /// Remove product from wishlist
   Future<void> removeFromWishlist(Product product) async {
     _wishlistIds.remove(product.id);
+    _wishlistProducts.removeWhere((item) => item.id == product.id);
     await _saveWishlist();
     notifyListeners();
   }
@@ -172,6 +181,11 @@ class ProductProvider extends ChangeNotifier {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setStringList(
           'wishlist_ids', _wishlistIds.map((id) => id.toString()).toList());
+      await prefs.setString(
+        'wishlist_products',
+        jsonEncode(
+            _wishlistProducts.map((product) => product.toJson()).toList()),
+      );
     } catch (e) {
       print('Error saving wishlist: $e');
     }
@@ -183,6 +197,20 @@ class ProductProvider extends ChangeNotifier {
       final prefs = await SharedPreferences.getInstance();
       final wishlistStrings = prefs.getStringList('wishlist_ids') ?? [];
       _wishlistIds = wishlistStrings.map((id) => int.parse(id)).toList();
+
+      _wishlistProducts = await _loadWishlistProducts(prefs);
+
+      if (_wishlistProducts.isEmpty && _wishlistIds.isNotEmpty) {
+        for (final id in _wishlistIds) {
+          final cachedProduct =
+              _productCache[id] ?? await _apiService.getCachedProductById(id);
+          if (cachedProduct != null) {
+            _wishlistProducts.add(cachedProduct);
+            _productCache[id] = cachedProduct;
+          }
+        }
+      }
+
       notifyListeners();
     } catch (e) {
       print('Error loading wishlist: $e');
@@ -192,12 +220,17 @@ class ProductProvider extends ChangeNotifier {
   /// Clear all wishlist items
   Future<void> clearWishlist() async {
     _wishlistIds.clear();
+    _wishlistProducts.clear();
     await _saveWishlist();
     notifyListeners();
   }
 
   /// Get wishlist products
   List<Product> getWishlistProducts() {
+    if (_wishlistProducts.isNotEmpty) {
+      return List<Product>.from(_wishlistProducts);
+    }
+
     return _products.where((p) => _wishlistIds.contains(p.id)).toList();
   }
 
@@ -207,6 +240,22 @@ class ProductProvider extends ChangeNotifier {
     _products = [];
     _currentSkip = 0;
     notifyListeners();
+  }
+
+  Future<List<Product>> _loadWishlistProducts(SharedPreferences prefs) async {
+    try {
+      final cachedWishlistProducts = prefs.getString('wishlist_products');
+      if (cachedWishlistProducts == null || cachedWishlistProducts.isEmpty) {
+        return [];
+      }
+
+      final decoded = jsonDecode(cachedWishlistProducts) as List<dynamic>;
+      return decoded
+          .map((item) => Product.fromJson(item as Map<String, dynamic>))
+          .toList();
+    } catch (e) {
+      return [];
+    }
   }
 
   @override
