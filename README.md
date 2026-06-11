@@ -91,42 +91,6 @@ flutter build apk
 flutter build appbundle
 ```
 
-## How to Use
-
-### Browsing Products
-1. Launch the app to see the product list
-2. Products are displayed in a 2-column grid
-3. Scroll down to automatically load more products (infinite scrolling)
-
-### Search Functionality
-1. Tap the search bar at the top
-2. Start typing the product name
-3. Results will automatically update after 500ms debounce
-
-### Filtering Products
-1. Tap the filter icon (⚙️) in the top-right corner
-2. Select category from available options
-3. Adjust price range using the slider
-4. Results update in real-time
-5. Tap "Reset Filters" to clear all filters
-
-### Viewing Product Details
-1. Tap any product card to view detailed information
-2. Swipe through product images using the indicators
-3. View full description, rating, stock status
-4. Add to wishlist or buy (demo)
-
-### Managing Wishlist
-1. Tap the heart icon on product cards to add/remove from wishlist
-2. Tap the wishlist icon (❤️) in top-right to view all wishlist items
-3. Products persist in wishlist even after closing the app
-4. Remove items individually or clear entire wishlist
-
-### Offline Mode
-- When internet is unavailable, the app displays cached products
-- Previously loaded products remain accessible
-- Search and filtering work on cached data
-
 ## API Integration
 
 ### DummyJSON API Endpoints Used
@@ -223,22 +187,6 @@ The app handles various error scenarios:
 4. **Lazy Loading** - Infinite scroll loads products on demand
 5. **State Management** - Provider pattern minimizes rebuilds
 
-## Testing the Features
-
-### Test Checklist
-- [ ] App launches without errors
-- [ ] Products load in grid view
-- [ ] Search works with debounce (type, wait, see results)
-- [ ] Category filter shows relevant products
-- [ ] Price range filter works correctly
-- [ ] Infinite scroll loads more products at bottom
-- [ ] Product detail screen displays all information
-- [ ] Image carousel navigates between images
-- [ ] Wishlist adds/removes products
-- [ ] Wishlist persists after app restart
-- [ ] App shows cached data when offline
-- [ ] Error messages display on API failure
-
 ## Troubleshooting
 
 ### Build Errors
@@ -266,18 +214,6 @@ flutter pub upgrade
 - Verify API endpoint is accessible
 - Check app logs for detailed error messages
 
-## Future Enhancements
-
-Potential improvements for advanced implementation:
-- Add to cart functionality with local cart management
-- Payment gateway integration
-- User authentication and profiles
-- Product reviews and ratings
-- Advanced filters (brand, size, color)
-- Dark mode support
-- Multi-language support
-- Push notifications
-
 ## API Response Example
 
 ```json
@@ -302,18 +238,6 @@ Potential improvements for advanced implementation:
 }
 ```
 
-## Contributing
-
-For learning purposes, feel free to:
-- Modify UI to practice Flutter widgets
-- Add new features for practice
-- Refactor code for better patterns
-- Optimize performance further
-
-## License
-
-This project is created for educational purposes.
-
 ## Resources
 
 - [Flutter Documentation](https://flutter.dev/docs)
@@ -322,16 +246,4 @@ This project is created for educational purposes.
 - [DummyJSON API](https://dummyjson.com)
 - [Dart Documentation](https://dart.dev/guides)
 
-## Support
-
-For issues or questions:
-1. Check the troubleshooting section
-2. Review code comments for explanations
-3. Consult Flutter documentation
-4. Check DummyJSON API documentation
-
 ---
-
-**Happy Coding!** 🚀
-
-This is a junior/intern level project demonstrating Flutter best practices. Use it as a reference for building more complex applications.
